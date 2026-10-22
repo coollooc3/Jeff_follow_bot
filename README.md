@@ -131,10 +131,18 @@ cd ~/xuegeros_ws/src/leap_marker_follow
 python3 -m unittest discover -s test -v
 ```
 
-后续先整理整车依赖和演示材料，再独立推进 Nav2 导航学习与集成。
+## Nav2 多点巡航仿真
+
+新增 [`leap_patrol`](leap_patrol/README.md)，在 TurtleBot3、Gazebo 和固定地图中练习 A → B → C 的任务调度，支持人工开始、途中取消和失败后结束整轮。导航算法、定位、控制和恢复复用 Nav2；巡航节点只调用 `NavigateToPose`，不发布速度。
+
+**2026-10-22 已完成三轮基础仿真演示。** 用户亲自补全 `Mission.on_result`，执行 A → B → C、途中取消，以及改为 B → A → C 后完成。Ubuntu 中 16 项框架与路线解析检查、5 项调度检查通过。三轮终端结果与人工观察见[验证记录](leap_patrol/VALIDATION.md)；这些结果不代表长期稳定性或实车导航已验证。
+
+[`leap_nav_demo`](leap_nav_demo/README.md) 保存本次从 Ubuntu 实际工作空间核对的现有仿真后端，使用入口为 `run_manual --gui`，沿用 RPP 配置。该包还保留历史实验工具；当前巡航不调用其中的行为克隆工具。实车跟随版本独立保留，本轮不需要小车、相机或热点。
+
+学习入口保留 `patrol_lesson` 的完整小例子和 `patrol_check` 的即时反馈。默认路线保持 A → B → C，B → A → C 另存示例配置。第三轮观察到一次额外原地旋转，原因未确认，本轮没有为此调整参数。构建与命令见[巡航说明](leap_patrol/README.md)。
 
 ## 来源与许可
 
 本项目从虚拟机中已有的 LEAP 工程继续开发，原仓库地址记录为 [czulcl/leap1](https://gitee.com/czulcl/leap1)。本轮新增的跟随逻辑、配置、ROS 接口和测试位于 `leap_marker_follow/`，不将继承的底盘、SLAM 或导航代码作为新增实现。
 
-继承工程保留根目录的 [LICENSE](LICENSE)；新跟随包的声明见 [leap_marker_follow/LICENSE](leap_marker_follow/LICENSE)。各部分保留各自的来源和许可文件。
+继承工程保留根目录的 [LICENSE](LICENSE)；新跟随包和巡航包的声明分别见 [leap_marker_follow/LICENSE](leap_marker_follow/LICENSE) 与 [leap_patrol/LICENSE](leap_patrol/LICENSE)。各部分保留各自的来源和许可声明。

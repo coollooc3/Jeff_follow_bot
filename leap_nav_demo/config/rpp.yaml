@@ -1,0 +1,13 @@
+# Nav2's official Regulated Pure Pursuit plugin, scaled for this Burger demo.
+plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+desired_linear_vel: 0.22
+# Use a shorter lookahead to reduce inside-corner cutting on tight detours.
+# Keep above the 0.20 m internal goal tolerance (RPP uses the carrot for goal rotation).
+lookahead_dist: 0.25
+rotate_to_heading_angular_vel: 0.6
+# Align earlier when a newly replanned path turns away from an unexpected box.
+rotate_to_heading_min_angle: 0.35
+regulated_linear_scaling_min_speed: 0.05
+use_collision_detection: true
+# At low speeds the 0.05 m grid otherwise leaves very few projected samples.
+max_allowed_time_to_collision_up_to_carrot: 2.0

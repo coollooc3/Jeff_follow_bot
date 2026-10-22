@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="demo_route_room">
+    <static>true</static>
+    <link name="west">
+      <pose>-0.45 0 0 0 0 0</pose>
+      <collision name="wall"><geometry><box><size>0.10 1.00 0.50</size></box></geometry></collision>
+      <visual name="wall"><geometry><box><size>0.10 1.00 0.50</size></box></geometry>
+        <material><ambient>0.25 0.35 0.5 1</ambient></material></visual>
+    </link>
+    <link name="east">
+      <pose>0.45 0 0 0 0 0</pose>
+      <collision name="wall"><geometry><box><size>0.10 1.00 0.50</size></box></geometry></collision>
+      <visual name="wall"><geometry><box><size>0.10 1.00 0.50</size></box></geometry>
+        <material><ambient>0.25 0.35 0.5 1</ambient></material></visual>
+    </link>
+    <link name="south">
+      <pose>0 -0.45 0 0 0 0</pose>
+      <collision name="wall"><geometry><box><size>1.00 0.10 0.50</size></box></geometry></collision>
+      <visual name="wall"><geometry><box><size>1.00 0.10 0.50</size></box></geometry>
+        <material><ambient>0.25 0.35 0.5 1</ambient></material></visual>
+    </link>
+  </model>
+</sdf>
