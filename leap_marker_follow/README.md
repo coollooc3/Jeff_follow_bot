@@ -1,6 +1,6 @@
 # LEAP 连续标记跟随
 
-独立的 ROS2 Humble / ament_python 功能包。现有 `leap_object_follow`、预览节点和有界试验脚本保持原样。本包不导入旧跟随包，不自动启动 Agent、相机或底盘。
+独立的 ROS2 Humble / ament_python 功能包。现有实车工作空间中的 `leap_object_follow`、预览节点和有界试验脚本保持原样；这些旧入口尚未收录到当前仓库。本包不导入旧跟随包，不自动启动 Agent、相机或底盘。项目概览和快速入口见[仓库首页](../README.md)。
 
 **当前状态：已通过ROS2 Humble构建、18项逻辑测试，以及2026-10-22首轮宿舍场景实车人工验收。** 用户反馈整轮效果符合预期，最终车头到标记面约24.5厘米。
 
@@ -97,7 +97,7 @@ python3 -m unittest discover -s test -v
 
 本地测试涵盖启停、超过旧预算仍运行、前进转向同时输出、近距停车、短漏检减速、长间隔停车/恢复、输入/障碍阻断、基准保存及简单理想相机闭环。理想模型不等于Gazebo或实车。
 
-2026-10-21 Windows检查：18项纯Python测试通过，9个Python文件语法与package.xml/resource检查通过。将阻断条件在内存中临时失效后，对应零输出测试确实失败；源文件未被此检查修改。Humble接口对照了官方[rclpy信号处理](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/signals.py)、[初始化](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/__init__.py)及[发布器](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/publisher.py)源码。随后已复制到Ubuntu，通过Humble构建及同样18项逻辑测试，核对安装入口、launch/config和16个传输文件；OpenCV为4.13.0，节点模块仅做导入检查，没有创建或启动节点。ROS通信、ArUco图像链路和实车效果仍待验收。
+2026-10-21 Windows检查：18项纯Python测试通过，9个Python文件语法与package.xml/resource检查通过。将阻断条件在内存中临时失效后，对应零输出测试确实失败；源文件未被此检查修改。Humble接口对照了官方[rclpy信号处理](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/signals.py)、[初始化](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/__init__.py)及[发布器](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/publisher.py)源码。随后已复制到Ubuntu，通过Humble构建及同样18项逻辑测试，核对安装入口、launch/config和16个传输文件；OpenCV为4.13.0。当时只做了节点模块导入检查；2026-10-22已进一步完成上文所述的首轮人工实车验收。
 
 Ubuntu也可使用标准测试入口。`setup.py`中的`tests_require=['pytest']`登记测试执行器，pytest可以执行本包的unittest风格测试：
 
