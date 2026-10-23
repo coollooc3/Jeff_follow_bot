@@ -1,0 +1,9 @@
+# Navigation metadata; the original saved YAML and PGM remain unchanged.
+# Keep PGM gray 205 (occupancy ~0.19608) unknown when loading a trinary map.
+image: my_first_map_20261023.pgm
+mode: trinary
+resolution: 0.05
+origin: [-2.96, -2.58, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

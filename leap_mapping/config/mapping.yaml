@@ -1,0 +1,15 @@
+# Overlay on the installed SLAM Toolbox mapper_params_online_async.yaml.
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan
+    mode: mapping
+    resolution: 0.05
+    min_laser_range: 0.12
+    max_laser_range: 3.5
+    minimum_travel_distance: 0.10
+    minimum_travel_heading: 0.10
+    map_update_interval: 1.0

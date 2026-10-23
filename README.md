@@ -141,8 +141,14 @@ python3 -m unittest discover -s test -v
 
 学习入口保留 `patrol_lesson` 的完整小例子和 `patrol_check` 的即时反馈。默认路线保持 A → B → C，B → A → C 另存示例配置。第三轮观察到一次额外原地旋转，原因未确认，本轮没有为此调整参数。构建与命令见[巡航说明](leap_patrol/README.md)。
 
+## 手动 SLAM 建图
+
+[`leap_mapping`](leap_mapping/README.md) 提供独立建图入口，复用 TurtleBot3 Gazebo 和已安装的 SLAM Toolbox。用户通过键盘探索、保存自己的 PGM/YAML 地图；另有新地图导航入口，启动 AMCL + Nav2，等待用户在 RViz 设置初始位姿、选择目标。建图和定位导航分别启动。
+
+2026-10-23 已完成用户手动建图、保存并重新加载地图、人工初始位姿与 AMCL 定位、单点导航，以及自建地图上的 A → B → C 巡航。用户反馈运动符合预期，巡航终态为 `COMPLETED`、3 / 3、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`。地图为 112×103 格、分辨率 0.05m；导航使用单独 YAML 保留未知区域，原图未改动。本轮是同一 Gazebo 场景的一次人工演示，未量化建图或定位误差。详见[建图记录](docs/mapping-status.md)。现有跟随及巡航版本保持独立。
+
 ## 来源与许可
 
 本项目从虚拟机中已有的 LEAP 工程继续开发，原仓库地址记录为 [czulcl/leap1](https://gitee.com/czulcl/leap1)。本轮新增的跟随逻辑、配置、ROS 接口和测试位于 `leap_marker_follow/`，不将继承的底盘、SLAM 或导航代码作为新增实现。
 
-继承工程保留根目录的 [LICENSE](LICENSE)；新跟随包和巡航包的声明分别见 [leap_marker_follow/LICENSE](leap_marker_follow/LICENSE) 与 [leap_patrol/LICENSE](leap_patrol/LICENSE)。各部分保留各自的来源和许可声明。
+继承工程保留根目录的 [LICENSE](LICENSE)；新跟随、巡航和建图包分别保留自己的许可：[leap_marker_follow/LICENSE](leap_marker_follow/LICENSE)、[leap_patrol/LICENSE](leap_patrol/LICENSE)、[leap_mapping/LICENSE](leap_mapping/LICENSE)。上游组件保留各自的来源和许可。

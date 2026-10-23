@@ -1,0 +1,14 @@
+{
+  "state": "COMPLETED",
+  "current_waypoint": "C",
+  "current_index": 2,
+  "completed": 3,
+  "total": 3,
+  "reason": "",
+  "last_nav_status": "SUCCEEDED",
+  "goal_unresolved": false,
+  "active_goal_uuid": null,
+  "distance_remaining": 0.22499999403953552,
+  "exercise_ready": true,
+  "simulation_only": true
+}

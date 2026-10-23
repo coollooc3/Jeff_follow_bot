@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>leap_mapping</name>
+  <version>0.1.0</version>
+  <description>Manual TurtleBot3 mapping and saved-map Nav2 navigation in an isolated simulation.</description>
+  <maintainer email="328209939+coollooc3@users.noreply.github.com">Jeff</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>leap_nav_demo</exec_depend>
+  <exec_depend>leap_patrol</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_rviz_plugins</exec_depend>
+  <exec_depend>nav2_regulated_pure_pursuit_controller</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

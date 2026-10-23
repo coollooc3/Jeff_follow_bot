@@ -1,0 +1,7 @@
+# Route for maps/my_first_map_20261023_nav.yaml, not arbitrary SLAM maps.
+# Checked on the saved raster; successful navigation still needs a live run.
+frame_id: map
+waypoints:
+  - {name: A, x: -1.8, y: 0.7, yaw: 0.0}
+  - {name: B, x: 1.8, y: 0.6, yaw: -1.5707963267948966}
+  - {name: C, x: 0.0, y: -1.8, yaw: 3.141592653589793}
