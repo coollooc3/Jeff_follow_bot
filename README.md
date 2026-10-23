@@ -147,6 +147,8 @@ python3 -m unittest discover -s test -v
 
 2026-10-23 已完成用户手动建图、保存并重新加载地图、人工初始位姿与 AMCL 定位、单点导航，以及自建地图上的 A → B → C 巡航。用户反馈运动符合预期，巡航终态为 `COMPLETED`、3 / 3、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`。地图为 112×103 格、分辨率 0.05m；导航使用单独 YAML 保留未知区域，原图未改动。本轮是同一 Gazebo 场景的一次人工演示，未量化建图或定位误差。详见[建图记录](docs/mapping-status.md)。现有跟随及巡航版本保持独立。
 
+用户随后在 Ubuntu 编辑 YAML，将路线扩展至 A → B → C → D，并取得 4 / 4 完成终态；另用地图外第二点验证真实 Nav2 `ABORTED` 后整轮 `FAILED`，保留失败点且未执行后续点。两次均复用原调度代码，配置及终态字段见[建图记录](docs/mapping-status.md)。地图内完全封路与实车导航仍未验证。
+
 ## 来源与许可
 
 本项目从虚拟机中已有的 LEAP 工程继续开发，原仓库地址记录为 [czulcl/leap1](https://gitee.com/czulcl/leap1)。本轮新增的跟随逻辑、配置、ROS 接口和测试位于 `leap_marker_follow/`，不将继承的底盘、SLAM 或导航代码作为新增实现。

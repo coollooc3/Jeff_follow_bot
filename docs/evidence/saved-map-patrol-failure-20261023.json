@@ -1,0 +1,14 @@
+{
+  "state": "FAILED",
+  "current_waypoint": "B_outside",
+  "current_index": 1,
+  "completed": 1,
+  "total": 3,
+  "reason": "Failed at B_outside with status ABORTED",
+  "last_nav_status": "ABORTED",
+  "goal_unresolved": false,
+  "active_goal_uuid": null,
+  "distance_remaining": 0.0,
+  "exercise_ready": true,
+  "simulation_only": true
+}

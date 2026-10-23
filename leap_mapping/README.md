@@ -133,6 +133,41 @@ ros2 service call /patrol/cancel std_srvs/srv/Trigger '{}'
 
 路线点已在保存的地图上检查为空闲且有车体空间；这是静态点位检查。用户随后运行一轮 A → B → C 并反馈符合预期，提供完整终态 `COMPLETED`、`completed=3`、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`、`active_goal_uuid=null`。这是本次同一 Gazebo 场景的单轮演示，没有重复成功率或精确停车误差测量；保留的 `distance_remaining` 是最后一次导航反馈，不作为最终位置误差。
 
+## 用 VS Code 扩展路线
+
+优先在 Ubuntu 的 VS Code 编辑 `~/xuegeros_ws/src/leap_mapping/config/` 中的 YAML。Windows 仓库副本不会自动改变 Ubuntu 中运行的路线。原三点配置保留，四点示例为 `config/patrol_route_abcd.yaml`；D 由用户通过 RViz Publish Point 选取，采用 `x=2.012, y=-0.818, yaw=0`。
+
+保存 YAML 后退出旧巡航节点，保留已经定位的导航会话，再加载新文件：
+
+```bash
+ros2 launch leap_patrol patrol.launch.py \
+  route_file:=$(ros2 pkg prefix --share leap_mapping)/config/patrol_route_abcd.yaml
+```
+
+上面的路径用于构建安装后的资源。刚在 VS Code 新建文件且尚未重新构建时，也可以直接指定源码路径：
+
+```bash
+ros2 launch leap_patrol patrol.launch.py \
+  route_file:=/home/chuyun/xuegeros_ws/src/leap_mapping/config/patrol_route_abcd.yaml
+```
+
+直接读取源码 YAML 不需要重新编译。节点在启动时读取路线，保存文件后需重启巡航节点加载；开始任务仍调用 `/patrol/start`。本次用户提供的四点终态为 `COMPLETED`、`completed=4`、`current_waypoint=D`、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`。调度实现未修改，本轮没有额外运动轨迹或精度测量。
+
+## 验证地图外目标失败
+
+`config/patrol_route_failure.yaml` 保存 A → B_outside → C。第二点 `(10,10)` 位于本次保存地图之外，用于验证真实 Nav2 失败结果能否结束整轮并报告失败点。
+
+在 VS Code 查看或修改 YAML；退出旧巡航节点，保留已定位的导航会话，再加载：
+
+```bash
+ros2 launch leap_patrol patrol.launch.py \
+  route_file:=$(ros2 pkg prefix --share leap_mapping)/config/patrol_route_failure.yaml
+```
+
+新文件尚未构建安装时，`route_file` 也可使用源码文件的绝对路径。调用 `/patrol/start` 后，Nav2 默认恢复树可能先清图、旋转、等待或后退，再报告最终结果。
+
+本次用户提供真实终态 `FAILED`、`current_waypoint=B_outside`、`completed=1`、`last_nav_status=ABORTED`、`reason="Failed at B_outside with status ABORTED"`、`goal_unresolved=false`，并反馈符合预期，未继续执行 C。调度实现、规划容差和默认恢复树均未改动。此例验证地图外无效目标，不作为地图内道路封闭或实车绕障的结果；`distance_remaining=0` 不表示抵达目标。
+
 ## 包结构与配置
 
 ```text
@@ -140,6 +175,8 @@ launch/mapping.launch.py   # 复用仿真，连接 SLAM 和 RViz
 launch/navigation.launch.py # 加载自己的地图，等待人工定位和发目标
 config/mapping.yaml       # 对已安装 SLAM 默认配置的小幅覆盖
 config/patrol_route.yaml  # 与本次保存地图配套的三点路线
+config/patrol_route_abcd.yaml # 用户选取 D 后扩展的四点路线
+config/patrol_route_failure.yaml # 第二点在图外，用于验证失败停止
 rviz/mapping.rviz         # 只显示地图、雷达和机器人
 rviz/navigation.rviz      # 地图、雷达、粒子、路径与定位/目标工具
 maps/                     # 原始地图及保留未知区域的导航 YAML

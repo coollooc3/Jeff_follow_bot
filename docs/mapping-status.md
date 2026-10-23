@@ -45,3 +45,32 @@ goal_unresolved=false, active_goal_uuid=null, reason=""
 据此完成“手动 SLAM 建图 → 保存并重新加载地图 → 人工初始位姿与 AMCL 定位 → 单点导航 → A/B/C 巡航”的一次仿真演示。终态中的 `distance_remaining=0.22499999403953552` 是保留的最后一次导航反馈，不能当成独立测量的最终位置误差。本轮沿用同一 TurtleBot3 Gazebo 场景，没有新增长期成功率、不同场景或实车导航结论。
 
 现有导航、巡航调度与实车跟随代码保持独立。操作见[建图和导航说明](../leap_mapping/README.md)。地图分辨率不能当成定位精度。
+
+## 用户扩展四点路线
+
+用户通过 RViz Publish Point 选取 D，消息使用 `frame_id=map`，位置为 `(2.0116257667541504, -0.8176941275596619, 0.002471923828125)`。二维路线取 `x=2.012, y=-0.818`，另设到达朝向 `yaw=0`，不使用点击位置的 z。保存地图上的 D 点为空闲格，至非空闲栅格的保守距离下界约为 0.321m；该静态检查不等于在线路径可达性保证。
+
+用户在 Ubuntu 编辑 `leap_mapping/config/patrol_route_abcd.yaml`，通过 `route_file` 参数加载它，调度代码和原三点路线均未修改。实际编辑文件已从 Ubuntu 取回，随本记录保存。用户随后提供[完整四点终态](evidence/saved-map-patrol-abcd-20261023.json)：
+
+```text
+state=COMPLETED, current_waypoint=D, current_index=3
+completed=4, total=4, last_nav_status=SUCCEEDED
+goal_unresolved=false, active_goal_uuid=null, reason=""
+```
+
+这验证了同一调度实现可通过配置从三点扩展为四点。本轮提供的是终态输出，没有另行提供完整轨迹、逐点原生结果、运动平滑度观察或精确最终位姿测量。`distance_remaining=0.21003150939941406` 仍是保留的最后一次导航反馈，不作为实测停车误差。
+
+## 真实 Nav2 失败结果：地图外目标
+
+用户在 Ubuntu 编辑并运行 `config/patrol_route_failure.yaml`，路线为 A → B_outside → C，第二点坐标为 `(10,10)`。运行前只读检查确认当前全局代价地图边界约为 `[-2.96,2.64) × [-2.58,2.57)`，该点在图外；规划器为 NavFn，目标替代容差 0.5m，使用安装版默认重规划与恢复树。图外目标会在规划器进入替代目标搜索前失败，本轮未修改容差、行为树或调度逻辑。
+
+用户提供两次相同的 FAILED 状态输出，并反馈全部符合预期。保存的一份[终态字段](evidence/saved-map-patrol-failure-20261023.json)为：
+
+```text
+state=FAILED, current_waypoint=B_outside, current_index=1
+completed=1, total=3, last_nav_status=ABORTED
+reason="Failed at B_outside with status ABORTED"
+goal_unresolved=false, active_goal_uuid=null
+```
+
+按终态与用户观察，本轮 A 成功后，第二点收到 Nav2 ABORTED，整轮失败且没有继续前往 C。两次周期状态不是两轮独立实验。`distance_remaining=0` 不表示抵达图外目标，任务结论依据最终状态。该场景验证真实 Nav2 的无效目标失败处理，没有验证地图内通道被障碍封死或实车绕障；没有单独采集完整 Action/轨迹日志或碰撞记录。

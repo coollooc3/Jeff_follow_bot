@@ -30,13 +30,27 @@
 
 用户提供完整终态：`COMPLETED`、C / 2、3 / 3、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`、`active_goal_uuid=null`，并反馈运动符合预期。状态字段原样保存在[本轮终态](../docs/evidence/saved-map-patrol-20261023.json)，地图处理及完整流程见[建图记录](../docs/mapping-status.md)。这是一轮同一仿真场景、自建地图的人工演示；没有测量最终位姿误差或重复成功率。
 
+## 补充：用户选点并扩展至四点
+
+用户从 RViz `/clicked_point` 取得 D 的 `map` 坐标，在 Ubuntu 编辑 `leap_mapping/config/patrol_route_abcd.yaml`，以 `route_file` 加载 A → B → C → D，未修改调度代码。
+
+完整输出为 `COMPLETED`、D / 3、4 / 4、`last_nav_status=SUCCEEDED`、`goal_unresolved=false`、`active_goal_uuid=null`，见[四点终态](../docs/evidence/saved-map-patrol-abcd-20261023.json)。由此确认本次通过配置扩展四点并完成任务；本轮未额外提供轨迹或运动观察，不据此增加平滑性、无碰撞或精度结论。
+
+## 补充：真实 Nav2 返回 ABORTED 后停止整轮
+
+用户执行 `leap_mapping/config/patrol_route_failure.yaml` 的 A → B_outside → C，第二点 `(10,10)` 在当前全局地图之外。保留默认 NavFn 与 Nav2 恢复树，调度实现未改动。
+
+用户提供两次相同终态，并反馈全部符合预期：`FAILED`、B_outside / 1、1 / 3、`last_nav_status=ABORTED`、`reason="Failed at B_outside with status ABORTED"`、`goal_unresolved=false`、`active_goal_uuid=null`。证据见[失败终态](../docs/evidence/saved-map-patrol-failure-20261023.json)。因此真实 Nav2 失败结果已经过任务层处理，后续点未执行；周期性重复输出不计作重复试验。
+
+这是地图外无效目标场景，与“地图内目标合法但通道被完全封死”不同；后者尚未进行。本轮没有单独采集后续目标的 Action 发送日志，停止后续点的结论结合终态、用户观察及既有调度逻辑判断。
+
 ## 软件侧检查与限制
 
 - Ubuntu 构建成功，16 项框架与路线解析测试通过。
 - 用户实现通过 5 项调度检查，包括逐点推进、完成后重启、失败停止、外部取消、单点路线。
 - 框架使用受控 Future 检查目标拒绝、执行失败、重复启动、受理前取消，以及取消与成功结果交错。
 - 审阅时临时去掉取消优先处理，回归检查能发现错误；临时将失败分支写成 `self.status`，调度检查能发现错误。正式源码保留正确实现。
-- 没有执行真实 Nav2 无路可达失败场景，也没有开展长期稳定性、不同仿真场景或实车导航验证。
+- 已执行真实 Nav2 的地图外目标失败场景；地图内通道封闭、长期稳定性、不同仿真场景和实车导航尚未验证。
 
 额外旋转的原因尚未定位，不据此归因于恢复行为、目标朝向或任务调度。用户选择本轮先保留该现象；后续需要优化运动流畅性时再分析。
 
